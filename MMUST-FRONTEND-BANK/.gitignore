@@ -1,0 +1,44 @@
+# --- Build Artifacts ---
+build/
+bin/
+obj/
+*.o
+*.a
+*.so
+*.exe
+*.out
+*.app
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.vs/
+out/
+CMakeSettings.json
+CMakeUserPresets.json
+
+# --- Dependencies ---
+# We ignore the entire vcpkg folder because others should run your setup.py 
+# to download it themselves. It's too big for GitHub!
+third_party/vcpkg/
+vcpkg_installed/
+
+# --- Database & Security (CRITICAL) ---
+# Never push your actual bank data or your secret keys
+*.db
+*.db-journal
+*.sqlite
+.env
+secret_key.txt
+*.pem
+*.key
+
+# --- Python Artifacts ---
+__pycache__/
+*.pyc
+
+# --- OS Specific ---
+.DS_Store
+thumbs.db
