@@ -1,0 +1,6 @@
+# Docker data
+postgres_data/
+build/
+
+# Secrets
+config.json

@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: bank_db
+    restart: always
+    environment:
+      POSTGRES_USER: bank_admin
+      POSTGRES_PASSWORD: secure_password_123
+      POSTGRES_DB: mmust_bank
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./MMUST-BACKEND-BANK
+    container_name: bank_api
+    depends_on:
+      - db
+    volumes:
+      - ./MMUST-BACKEND-BANK:/app
+    ports:
+      - "8080:8080"
+    stdin_open: true
+    tty: true
