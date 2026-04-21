@@ -1,52 +1,57 @@
 cmake_minimum_required(VERSION 3.10)
 project(MMUST-FRONTEND-BANK)
 
-# 1. Use C++17 for modern features
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# 2. Fix the OpenGL policy warning for Fedora
 cmake_policy(SET CMP0072 NEW)
 
-# 3. Find System Dependencies (GPU/Windowing)
+# 1. Find System Dependencies
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
+find_package(OpenSSL REQUIRED) # Crucial for HTTPS calls to your Droplet
+find_package(Threads REQUIRED) # Needed for httplib's networking
 
-# 4. Define ImGui Paths (Based on your 'third_party' folder)
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+# 2. Define Third-Party Paths
+set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
+set(IMGUI_DIR ${THIRD_PARTY_DIR}/imgui)
+set(HTTPLIB_DIR ${THIRD_PARTY_DIR}/httplib)
+set(JSON_DIR ${THIRD_PARTY_DIR}/json)
 
-# 5. Tell the compiler where to look for headers (.h files)
+# 3. Include Directories (Where the .h and .hpp files are)
 include_directories(
-    include 
-    ${IMGUI_DIR} 
+    include
+    ${IMGUI_DIR}
     ${IMGUI_DIR}/backends
+    ${HTTPLIB_DIR}    # Point this to where httplib.h is
+    ${JSON_DIR}/include # nlohmann/json usually puts headers in an 'include' subfolder
 )
 
-# 6. Manually collect ImGui source files
-# We compile these directly into your app
+# 4. Source Files (Including your new Auth logic)
 set(IMGUI_SOURCES
     ${IMGUI_DIR}/imgui.cpp
     ${IMGUI_DIR}/imgui_draw.cpp
     ${IMGUI_DIR}/imgui_tables.cpp
     ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
     ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
-# 7. Collect your own source files
-# I'm explicitly adding main.cpp and recursively finding others in src
+# Recursively find all your .cpp files in src (including src/core/auth.cpp)
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 
-# 8. Create the Executable
+# 5. Create the Executable
 add_executable(${PROJECT_NAME} 
-    src/main.cpp 
     ${PROJECT_SOURCES} 
     ${IMGUI_SOURCES}
 )
 
-# 9. Link everything together (The Handshake)
+# 6. Link the "Muscles" (Libraries)
 target_link_libraries(${PROJECT_NAME} 
     glfw 
     OpenGL::GL 
+    OpenSSL::SSL 
+    OpenSSL::Crypto
+    Threads::Threads
     ${CMAKE_DL_LIBS}
 )
