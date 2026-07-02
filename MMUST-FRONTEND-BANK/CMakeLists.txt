@@ -44,6 +44,9 @@ file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} 
     ${PROJECT_SOURCES} 
     ${IMGUI_SOURCES}
+    src/ui/authui.cpp
+    src/service/authservice.cpp
+    include/service/authservice.h
 )
 
 # 6. Link the "Muscles" (Libraries)
@@ -55,3 +58,10 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     ${CMAKE_DL_LIBS}
 )
+# Forces the compiler to include line numbers and variable names in the binary
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# Explicitly add -g for GCC/Clang if in Debug mode
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")

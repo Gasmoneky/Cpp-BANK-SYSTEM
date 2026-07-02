@@ -2,7 +2,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
-#include <GLFW/glfw3.h> 
+#include <GLFW/glfw3.h>
+#include "ui/signin_authui.h"
 
 static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
@@ -29,7 +30,7 @@ int main(int, char**) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     // 4. Global Styling
     ImGui::StyleColorsDark();
@@ -51,8 +52,8 @@ int main(int, char**) {
         ImGui::NewFrame();
 
         // --- PROJECT CONTENT STARTS HERE ---
-        
 
+         ui::render_auth_siginpage();
 
         // --- PROJECT CONTENT ENDS HERE ---
 

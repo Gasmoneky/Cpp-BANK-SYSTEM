@@ -1,0 +1,8 @@
+{
+    "name": "MMUST Bank Dev Environment",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/app/src/BANK_SERVER",
+    "shutdownAction": "stopCompose",
+    "remoteUser": "root"
+}

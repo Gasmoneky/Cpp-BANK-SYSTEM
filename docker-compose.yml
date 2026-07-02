@@ -8,13 +8,14 @@ services:
       POSTGRES_PASSWORD: secure_password_123
       POSTGRES_DB: mmust_bank
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql
     ports:
       - "5432:5432"
 
   backend:
     build: ./MMUST-BACKEND-BANK
     container_name: bank_api
+    restart: unless-stopped
     depends_on:
       - db
     volumes:
