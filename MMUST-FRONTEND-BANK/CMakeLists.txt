@@ -3,6 +3,7 @@ project(MMUST-FRONTEND-BANK)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
 cmake_policy(SET CMP0072 NEW)
 
 # 1. Find System Dependencies
@@ -41,8 +42,8 @@ set(IMGUI_SOURCES
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 
 # 5. Create the Executable
-add_executable(${PROJECT_NAME} 
-    ${PROJECT_SOURCES} 
+add_executable(${PROJECT_NAME}
+    ${PROJECT_SOURCES}
     ${IMGUI_SOURCES}
     src/ui/authui.cpp
     src/service/authservice.cpp
@@ -50,10 +51,10 @@ add_executable(${PROJECT_NAME}
 )
 
 # 6. Link the "Muscles" (Libraries)
-target_link_libraries(${PROJECT_NAME} 
-    glfw 
-    OpenGL::GL 
-    OpenSSL::SSL 
+target_link_libraries(${PROJECT_NAME}
+    glfw
+    OpenGL::GL
+    OpenSSL::SSL
     OpenSSL::Crypto
     Threads::Threads
     ${CMAKE_DL_LIBS}

@@ -1,12 +1,31 @@
-#ifndef AUTH_H
-#define AUTH_H
+#pragma once
 #include <string>
 
-class Auth {
+enum class AuthStatus {
+    AUTHENTICATED,
+    INITIALISING,
+    NOT_AUTHENTICATED
+};
+
+class AuthManager {
+private:
+
+    AuthManager();
+
 public:
-    static bool login(const std::string& username, const std::string& password);
-    enum AuthStatus {
-        INITIALISING,
-        NOT_AUTHENTICATED,
-        AUTHENTICATED
-    };
+
+    AuthManager(const AuthManager&) = delete;
+    AuthManager& operator=(const AuthManager&) = delete;
+
+
+    static AuthManager& getInstance();
+
+    void saveSession(std::string jwtToken, std::string refreshToken);
+    bool loadSession();
+
+    void init(std::string jwtToken);
+
+    std::string jwtToken;
+    std::string refreshToken;
+    AuthStatus currentStatus;
+};

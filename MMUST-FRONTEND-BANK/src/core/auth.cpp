@@ -1,22 +1,19 @@
 #include "core/auth.h"
-#include "ui/authui.h"
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-#include "httplib.h"
+#include "ui/signin_authui.h"
 #include "nlohmann/json.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <filesystem>
 #include <chrono>
 using json = nlohmann::json;
-namespace Core {
+
     AuthManager& AuthManager::getInstance() {
         static AuthManager instance;
         return instance;
     }
-}
+
 AuthManager::AuthManager(){
-    currentStatus = AuthStatus::INITIALISING;
+    currentStatus = AuthStatus::NOT_AUTHENTICATED;
 }
 
 void AuthManager::saveSession(std::string jwtToken,std::string refreshToken){
@@ -27,7 +24,7 @@ void AuthManager::saveSession(std::string jwtToken,std::string refreshToken){
     sessionData["last_activity"] = now_seconds;
 std::ofstream file("session.jwt");
 if (file.is_open()) {
-    file << sessionData.dump(4); 
+    file << sessionData.dump(4);
     file.close();
     std::cout << "[AUTH]Session saved successfully. Timestamp: " << now_seconds << std::endl;
 } else {
@@ -39,9 +36,10 @@ bool AuthManager::loadSession(){
         std::cout << "[AUTH]No session file found." << std::endl;
         return false;
     }
+    json data;
     try{
         std::ifstream file("session.jwt");
-        json data = json::parse(file);
+        data = json::parse(file);
         }
         catch(...){
             std::cerr << "[AUTH]Failed to load session: " << std::endl;
@@ -61,7 +59,7 @@ bool AuthManager::loadSession(){
 this->jwtToken = data["access_token"];
 std::cout << "[AUTH]Session loaded successfully. Last activity: " << lastActivity << std::endl;
 return true;
-            
+
 }
 
 void AuthManager::init(std::string jwtToken){

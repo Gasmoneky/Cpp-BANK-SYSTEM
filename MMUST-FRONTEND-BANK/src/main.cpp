@@ -2,6 +2,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
+#include <iostream>
 #include <GLFW/glfw3.h>
 #include "ui/signin_authui.h"
 
@@ -24,7 +25,7 @@ int main(int, char**) {
     GLFWwindow* window = glfwCreateWindow(1280, 720, "MMUST Bank System", NULL, NULL);
     if (window == NULL) return 1;
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync (prevents your T14 from melting)
+    glfwSwapInterval(1); // Enable vsync (prevents high CPU/GPU cooking)
 
     // 3. Setup Dear ImGui Context
     IMGUI_CHECKVERSION();
@@ -32,11 +33,27 @@ int main(int, char**) {
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-    // 4. Global Styling
+    // --- ADVANCED TYPOGRAPHY CONFIGURATION ---
+    const char* fontPath = "assets/fonts/ElmsSans-VariableFont_wght.ttf";
+    ImFont* elmsSansFont = io.Fonts->AddFontFromFileTTF(fontPath, 28.0f);
+
+    // Safety Fallback check if execution binary path shifts or files are missing
+    if (elmsSansFont == nullptr) {
+        std::cerr << "[WARNING] Custom typography asset not found at: " << fontPath
+                  << " | Falling back to upscaled default layout settings." << std::endl;
+
+        ImFontConfig config;
+        config.SizePixels = 26.0f;
+        io.Fonts->AddFontDefault(&config);
+    }
+
+    // 4. Global Styling Tweaks
     ImGui::StyleColorsDark();
     auto& style = ImGui::GetStyle();
     style.WindowRounding = 6.0f;
-    style.FrameRounding = 4.0f;
+    style.FrameRounding = 6.0f;       // Clean smooth fields matching your design mockup
+    style.ChildRounding = 12.0f;      // Smooth rounding for inner card panels
+    style.WindowPadding = ImVec2(20.0f, 20.0f);
 
     // 5. Setup Platform/Renderer Backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -53,7 +70,7 @@ int main(int, char**) {
 
         // --- PROJECT CONTENT STARTS HERE ---
 
-         ui::render_auth_siginpage();
+        ui::render_auth_signinpage();
 
         // --- PROJECT CONTENT ENDS HERE ---
 
@@ -62,7 +79,7 @@ int main(int, char**) {
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(0.08f, 0.08f, 0.09f, 1.0f); // Sleek charcoal background
+        glClearColor(0.08f, 0.08f, 0.09f, 1.0f); // Sleek charcoal background canvas
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

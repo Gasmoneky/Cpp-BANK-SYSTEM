@@ -4,3 +4,22 @@ build/
 
 # Secrets
 config.json
+# Prerequisites
+*.d
+
+# Compilation artifacts
+*.o
+*.obj
+*.bin
+
+# CMake tracking directories and artifacts
+CMakeFiles/
+CMakeCache.txt
+CMakeConfigureLog.yaml
+Makefile
+cmake_install.cmake
+build/
+
+# IDE/Framework caches
+imgui.ini
+.shadow/
